@@ -5,12 +5,13 @@ export default Ember.Object.extend(SharedStuff, {
   direction: 'down',
   intent: 'down',
 
-  x: 1,
-  y: 2,
+  x: 0,
+  y: 0,
 
   draw(){
     let x = this.get('x');
     let y = this.get('y');
+    
     let radiusDivisor = 2;
     this.drawCircle(x, y, radiusDivisor, this.get('direction'));
   },
@@ -52,6 +53,7 @@ export default Ember.Object.extend(SharedStuff, {
 
   pathBlockedInDirection(direction){
     let cellTypeInDirection = this.cellTypeInDirection(direction);
+
     return Ember.isEmpty(cellTypeInDirection) || cellTypeInDirection === 1;
   },
 
@@ -59,10 +61,18 @@ export default Ember.Object.extend(SharedStuff, {
     let nextX = this.nextCoordinate('x', direction);
     let nextY = this.nextCoordinate('y', direction);
 
-    return this.get(`grid.${nextY}.${nextX}`);
+    // another 15mins to find out that the grid is now defined on the level model 
+    return this.get(`level.grid.${nextY}.${nextX}`);
   },
  
   nextCoordinate(coordinate, direction){
     return this.get(coordinate) + this.get(`directions.${direction}.${coordinate}`);
+  },
+
+  restart(){
+    this.set('x',0);
+    this.set('y',0);
+    this.set('frameCycle', 0);
+    this.set('direction', 'stopped');
   }
 });
