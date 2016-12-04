@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import KeyboardShortcuts from 'ember-keyboard-shortcuts/mixins/component';
 import Pac from '../models/pac';
-import Level from '../models/level';
+import Level from '../models/level2';
 import SharedStuff from '../mixins/shared-stuff';
 
 export default Ember.Component.extend(KeyboardShortcuts, SharedStuff, {
@@ -12,7 +12,7 @@ export default Ember.Component.extend(KeyboardShortcuts, SharedStuff, {
   didInsertElement(){
     let level = Level.create();
     this.set('level', level);
-    let pac = Pac.create({level: level});
+    let pac = Pac.create({level: level, x: level.get('startingPac.x'), y: level.get('startingPac.y') });
     this.set('pac', pac);
     this.loop();
   },

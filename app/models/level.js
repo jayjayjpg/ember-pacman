@@ -10,6 +10,10 @@ export default Ember.Object.extend({
     [1, 2, 2, 2, 2, 2, 2, 1]
   ],
   squareSize: 40,
+  startingPac: {
+    x: 0,
+    y: 0
+  },
   width: Ember.computed(function(){
     return this.get('grid.firstObject.length');
   }),
