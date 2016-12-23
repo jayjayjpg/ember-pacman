@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import KeyboardShortcuts from 'ember-keyboard-shortcuts/mixins/component';
 import Pac from '../models/pac';
+import Ghost from '../models/ghost';
 import Level from '../models/level2';
 import SharedStuff from '../mixins/shared-stuff';
 
@@ -13,7 +14,9 @@ export default Ember.Component.extend(KeyboardShortcuts, SharedStuff, {
     let level = Level.create();
     this.set('level', level);
     let pac = Pac.create({level: level, x: level.get('startingPac.x'), y: level.get('startingPac.y') });
+    let ghost = Ghost.create({ level: level, x: 0, y: 0, direction: 'down', pac: pac });
     this.set('pac', pac);
+    this.set('ghost', ghost);
     this.loop();
   },
 
@@ -76,10 +79,13 @@ export default Ember.Component.extend(KeyboardShortcuts, SharedStuff, {
 
   loop(){
     this.get('pac').move();
+    this.get('ghost').move();
     this.processAnyPellets();
     this.clearScreen();
     this.drawGrid();
     this.get('pac').draw();
+    this.get('ghost').draw();
+
     Ember.run.later(this, this.loop, 1000/60);
   },
 

@@ -4,7 +4,7 @@ export default Level.extend({
   squareSize: 60,
   startingPac: {
     x: 0,
-    y: 3
+    y: 2
   },
   grid: [
     [2, 2, 2, 2, 2, 2, 2, 2, 2],
