@@ -9,14 +9,23 @@ export default Ember.Component.extend(KeyboardShortcuts, SharedStuff, {
 
   score: 0,
   levelNumber: 1,
+  lives: 3,
 
   didInsertElement(){
     let level = Level.create();
     this.set('level', level);
     let pac = Pac.create({level: level, x: level.get('startingPac.x'), y: level.get('startingPac.y') });
-    let ghost = Ghost.create({ level: level, x: 0, y: 0, direction: 'down', pac: pac });
+    let ghosts = level.get('startingGhosts').map((startPosition) => {
+      return Ghost.create({
+        level: level,
+        x: startPosition.x,
+        y: startPosition.y,
+        direction: 'down',
+        pac: pac
+      });
+    });
     this.set('pac', pac);
-    this.set('ghost', ghost);
+    this.set('ghosts', ghosts);
     this.loop();
   },
 
@@ -68,23 +77,44 @@ export default Ember.Component.extend(KeyboardShortcuts, SharedStuff, {
       if(this.get('level').levelComplete()){
         this.incrementProperty('levelNumber');
         this.get('level').restart();
+        this.restart();
       }
     }
   },
 
+  collidedWithGhost(){
+    return this.get('ghosts').any(ghost => {
+      return this.get('pac.x') === ghost.get('x') &&
+             this.get('pac.y') === ghost.get('y')
+    })
+  },
+
   restart(){
+    
+    if(this.get('lives') <= 0){
+      this.set('lives', 3);
+      this.set('score', 0);
+      this.get('level').restart();
+    }
+    
     this.get('pac').restart();
-    this.get('level').restart();
+    this.get('ghosts').forEach(ghost => ghost.restart());
+
   },
 
   loop(){
     this.get('pac').move();
-    this.get('ghost').move();
+    this.get('ghosts').forEach(ghost => ghost.move());
     this.processAnyPellets();
     this.clearScreen();
     this.drawGrid();
     this.get('pac').draw();
-    this.get('ghost').draw();
+    this.get('ghosts').forEach(ghost =>  ghost.draw());
+
+    if (this.collidedWithGhost()){
+      this.decrementProperty('lives');
+      this.restart();
+    }
 
     Ember.run.later(this, this.loop, 1000/60);
   },

@@ -8,12 +8,22 @@ export default Ember.Object.extend(SharedStuff, Movement, {
   x: null,
   y: null,
   level: null,
+  init(){
+    this.set('startingX', this.get('x'));
+    this.set('startingY', this.get('y'));
+    return this._super(...arguments);
+  },
   draw(){
-    console.log("draw ghost");
     let x = this.get('x');
     let y = this.get('y');
     let radiusDivisor = 2;
     this.drawCircle(x, y, radiusDivisor, this.get('direction'), '#f55');
+  },
+  restart(){
+    this.set('x', this.get('startingX'));
+    this.set('y', this.get('startingY'));
+    this.set('frameCycle', 0);
+    this.set('direction', 'stopped');
   },
   changeDirection(){
     let directions = ['left', 'right', 'up', 'down'];
@@ -34,7 +44,7 @@ export default Ember.Object.extend(SharedStuff, Movement, {
     }
   },
   getRandomItem(list, weight){
-    var totalWeight = weight.reduce(function(prev, curr, i, arr) {
+    var totalWeight = weight.reduce(function(prev, curr) {
       return prev + curr;
     });
     var randomNum = Math.random() * totalWeight;

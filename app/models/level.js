@@ -14,6 +14,13 @@ export default Ember.Object.extend({
     x: 0,
     y: 0
   },
+  startingGhosts: [{
+    x: 6,
+    y: 0
+  }, {
+    x: 6,
+    y: 5
+  }],
   width: Ember.computed(function(){
     return this.get('grid.firstObject.length');
   }),

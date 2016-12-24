@@ -6,6 +6,13 @@ export default Level.extend({
     x: 0,
     y: 2
   },
+  startingGhosts: [{
+    x: 0,
+    y: 0
+  }, {
+    x: 5,
+    y: 0
+  }],
   grid: [
     [2, 2, 2, 2, 2, 2, 2, 2, 2],
     [2, 1, 1, 2, 1, 2, 1, 1, 2],
