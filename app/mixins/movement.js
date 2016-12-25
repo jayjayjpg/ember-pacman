@@ -6,7 +6,10 @@ export default Ember.Mixin.create({
   level: null,
   direction: 'down',
   move(){
-    if(this.animationCompleted()){
+    if (this.get('removed')){
+      // nothing to do
+    }
+    else if(this.animationCompleted()){
       this.finalizeMove();
       this.changeDirection();
     }
@@ -44,6 +47,21 @@ export default Ember.Mixin.create({
   },
  
   nextCoordinate(coordinate, direction){
-    return this.get(coordinate) + this.get(`directions.${direction}.${coordinate}`);
+    let next = this.get(coordinate) + this.get(`directions.${direction}.${coordinate}`);
+    if (this.get('level.teleport')){
+      if(direction === 'up' || direction === 'down'){
+        return this.modulo(next, this.get('level.height'));
+        }
+        else {
+          return this.modulo(next, this.get('level.width'));
+        }
+    }
+    else {
+      return next;
+    }
+  },
+
+  modulo(num, mod){
+    return ((num + mod) % mod);
   }
 });

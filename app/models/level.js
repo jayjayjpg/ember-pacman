@@ -1,7 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Object.extend({
-  grid: [
+  teleport: true,
+  layout: [
     [2, 2, 2, 2, 2, 2, 2, 1],
     [2, 1, 2, 1, 2, 2, 2, 1],
     [2, 2, 1, 2, 2, 2, 2, 1],
@@ -48,13 +49,7 @@ export default Ember.Object.extend({
     return !anyPelletsLeft;
   },
   restart(){
-    let grid = this.get('grid');
-    grid.forEach((row, rIndex) => {
-      row.forEach((cell, cIndex) => {
-        if (cell === 0){
-          grid[rIndex][cIndex] = 2;
-        }
-      });
-    });
+    let newGrid = jQuery.extend(true, [], this.get('layout'));
+    this.set('grid', newGrid);
   }
 });

@@ -8,6 +8,7 @@ export default Ember.Object.extend(SharedStuff, Movement, {
   x: null,
   y: null,
   level: null,
+  removed: false,
   init(){
     this.set('startingX', this.get('x'));
     this.set('startingY', this.get('y'));
@@ -39,8 +40,11 @@ export default Ember.Object.extend(SharedStuff, Movement, {
       return 0;
     }
     else {
-      let chances = ((this.get('pac.y') - this.get('y')) * this.get(`directions.${direction}.y`)) + ((this.get('pac.x') - this.get('x')) * this.get(`directions.${direction}.x`));
-      return Math.max(chances, 0) + 0.2;
+        let attractionRate = ((this.get('pac.y') - this.get('y')) * this.get(`directions.${direction}.y`)) + ((this.get('pac.x') - this.get('x')) * this.get(`directions.${direction}.x`));
+        if (this.get('pac.powerMode')){
+          attractionRate *= -1; 
+        }
+      return Math.max(attractionRate, 0) + 0.2;
     }
   },
   getRandomItem(list, weight){
@@ -59,5 +63,11 @@ export default Ember.Object.extend(SharedStuff, Movement, {
       }
       
     }
+  },
+  retreat(){
+    this.set('removed', true);
+    this.set('frameCycle', 0);
+    this.set('x', this.get('level.ghostRetreat.x'));
+    this.set('y', this.get('level.ghostRetreat.y'));
   }
 });
